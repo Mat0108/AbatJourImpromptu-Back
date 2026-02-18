@@ -1,0 +1,92 @@
+
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const https = require("https");
+const fs = require("fs");
+const path = require("path")
+const app = express();
+let version = "1.0.0";
+// Middleware pour analyser les requêtes au format JSON
+app.use(express.json());
+
+// Middleware pour analyser les requêtes au format x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+// Configuration des options CORS en fonction de l'environnement
+
+const allowedOrigins = [
+  /\.netlify\.app$/,     
+  /\.netlify\.live$/,     // toutes les URLs se terminant par .netlify.live
+  'https://guillaumebarnabe.fr',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000'
+];
+
+var corsOptionsProd = {
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // pour les requêtes depuis Postman ou curl
+    if(allowedOrigins.some(o => o instanceof RegExp ? o.test(origin) : o === origin)){
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
+
+var corsOptionsDev = {
+  origin: process.env.DEV_URL,
+  optionsSuccessStatus: 200
+}
+var corsOptions = process.env.ENV_TYPE == "prod" ? corsOptionsProd : process.env.ENV_TYPE == "dev" ? corsOptionsDev : null
+
+app.use(cors(corsOptions));
+
+// Connexion à la base de données MongoDB via Mongoose
+const db = require("./app/models");
+console.log('db : ', db.url)
+async function connectWithRetry(maxRetries = 5, delay = 2000) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      console.log(`Tentative de connexion à MongoDB (${i + 1}/${maxRetries})...`);
+      await mongoose.connect(db.url, { useNewUrlParser: true, useUnifiedTopology: true });
+      console.log("Connecté à la base de données !");
+      return;
+    } catch (err) {
+      console.log(`MongoDB non prêt, attente de ${delay}ms...`);
+      await new Promise(res => setTimeout(res, delay));
+    }
+  }
+  console.error("Impossible de se connecter à MongoDB après plusieurs tentatives.");
+  process.exit(1);
+}
+
+// Lancer la connexion
+connectWithRetry();
+// Import et configuration des routes de l'application
+const imageRoute = require("./app/routes/imageRoute");
+const horaireRoute = require("./app/routes/horaireRoute");
+
+imageRoute(app,corsOptions);
+horaireRoute(app,corsOptions);
+
+app.get("/", (req, res) => {
+  res.status(200)
+  res.json({ message: `Bienvenue sur l'application AbatJourImpromptu : ${version}` });
+});
+
+// Configuration du port d'écoute du serveur
+/*const options = {
+   key: fs.readFileSync("cert.key"),
+   cert: fs.readFileSync("cert.crt"),
+ };
+
+const PORT = process.env.NODE_DOCKER_PORT || 8080;
+https.createServer(options, app).listen(PORT, () => {
+   console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
+});*/
+const PORT =  8080
+app.listen(PORT, () => console.log(`✅ Node HTTP sur ${PORT}`));
+module.exports= app
