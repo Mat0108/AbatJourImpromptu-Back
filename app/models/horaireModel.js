@@ -15,7 +15,7 @@ let horaireSchema = new Schema({
     vendredi:{type: String},
     samedi:{type:String},
     dimanche:{type:String},
-    special_horaire:{type:String}
+    special_horaire: {start:{type:Date}, end:{type:Date}}
    
 });
 

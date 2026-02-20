@@ -36,7 +36,7 @@ COPY --from=build /app .
 ENV NODE_ENV=production
 
 # Port exposé
-EXPOSE 8080
+EXPOSE 8082
 
 EXPOSE 465
 

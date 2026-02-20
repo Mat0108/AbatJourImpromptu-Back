@@ -13,7 +13,7 @@ services:
       - 465:465
     environment:
         - ENV_TYPE=prod
-        - NODE_PORT= 8080
+        - NODE_PORT= 8082
         - MONGODB_URL=mongodb://admin:F8G3iKGT%408cASsGy@37.59.112.87:27017/AbatJourImpromptu?authSource=admin&authMechanism=SCRAM-SHA-256
 
     stdin_open: true

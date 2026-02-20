@@ -23,10 +23,10 @@ RUN npm install -g nodemon
 
 # Variables d’environnement
 ENV NODE_ENV=development
-ENV PORT=8080
+ENV PORT=8082
 
 # Expose le port
-EXPOSE 8080
+EXPOSE 8082
 
 # Commande par défaut : nodemon (auto-restart)
 CMD ["nodemon", "--legacy-watch", "server.js"]

@@ -17,8 +17,7 @@ app.use(express.static('public'));
 
 const allowedOrigins = [
   /\.netlify\.app$/,     
-  /\.netlify\.live$/,     // toutes les URLs se terminant par .netlify.live
-  'https://guillaumebarnabe.fr',
+  /\.netlify\.live$/,     
   'http://localhost:3000',
   'http://127.0.0.1:3000'
 ];
@@ -87,6 +86,6 @@ const PORT = process.env.NODE_DOCKER_PORT || 8080;
 https.createServer(options, app).listen(PORT, () => {
    console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
 });*/
-const PORT =  8080
+const PORT =  8082
 app.listen(PORT, () => console.log(`✅ Node HTTP sur ${PORT}`));
 module.exports= app

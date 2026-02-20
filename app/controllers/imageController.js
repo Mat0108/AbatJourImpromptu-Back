@@ -12,19 +12,21 @@ exports.createMultipleImage = async (req,res)=>{
         return res.status(400).send("Aucun fichier envoyé");
       }
       const results = []
-
-     await Promise.all(req.files.map(async (file) => {
+      
+      await Promise.all(req.files.map(async (file,pos) => {
         const previewBuffer = await sharp(file.buffer)
           .rotate()
           .resize({ width: 1920, withoutEnlargement: true })
           .jpeg({ quality: 85 })
           .toBuffer();
-
+        let data = JSON.parse(req.body.data)
         await imageModel.create({
           image: `data:image/jpeg;base64,${previewBuffer.toString("base64")}`,
           gridId: req.body.gridId,
-          width: 1,
-          height: 1
+          w: data[pos].w ?? 1,
+          h: data[pos].h ?? 1,
+          x: data[pos].x,
+          y: data[pos].y,
         });
 
         results.push({
@@ -54,7 +56,6 @@ exports.updatePositionImage = (req,res)=>{
 exports.updatePositionsImages = async (req, res) => {
   try {
     const updates = req.body; // array
-    console.log('updates : ', updates)
 
     const bulkOps = updates.map(item => ({
       updateOne: {
@@ -126,4 +127,16 @@ exports.getImageByGrid = (req,res)=>{
     res.status(401);
     res.json({message:"Impossible de récupérer les images"})
   }
+}
+
+exports.removeImage = (req,res)=>{
+  imageModel.findByIdAndRemove(`${req.params.imageId}`).exec(async (error,image)=>{
+    if(error){
+      res.status(401);
+      res.json({message:"Impossible de récupérer l'image"})
+    }else{
+      res.status(200);
+      res.json(image)
+    }
+  })
 }
