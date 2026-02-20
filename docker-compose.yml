@@ -9,8 +9,8 @@ services:
     restart: always
     env_file: .env
     ports:
-      - 8080:8080
-      - 465:465
+      - 8082:8082
+      - 466:466
     environment:
         - ENV_TYPE=prod
         - NODE_PORT= 8082
