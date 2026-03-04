@@ -11,4 +11,4 @@ echo "Starting containers..."
 docker compose -f docker-compose.yml up -d
 
 echo "Showing logs for 'server'..."
-docker compose logs -f server
+docker compose logs -f serverabatjour

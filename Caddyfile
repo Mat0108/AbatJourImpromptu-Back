@@ -1,3 +1,6 @@
 api.guillaumebarnabe.fr {
     reverse_proxy server:8080
 }
+abatjourimpromtu.netlify.app {
+    reverse_proxy serverabatjour:8082
+}

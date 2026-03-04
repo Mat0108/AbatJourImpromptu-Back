@@ -21,42 +21,8 @@ services:
     cap_drop:
       - ALL
     networks:
-      - serverabatjour
-#   caddy:
-#     image: caddy:latest
-#     container_name: caddy-proxy
-#     restart: always
-#     ports:
-#       - "80:80"
-#       - "443:443"
-#     volumes:
-#       - ./Caddyfile:/etc/caddy/Caddyfile
-#       - caddy-data:/data
-#       - caddy-config:/config
-#     depends_on:
-#       - server
-#     networks:
-#       - server
-
-#   mongo:
-#     image: mongo
-#     ports:
-#      - 27017:27017
-#     volumes:
-#       - mongo-data:/data/db
-#       - ./mongo-init:/docker-entrypoint-initdb.d
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-#       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-#       MONGO_INITDB_DATABASE: guillaume
-#     command: mongod --bind_ip_all
-#     networks: 
-#       - server
-# volumes:
-#   mongo-data:
-#   caddy-data:
-#   caddy-config:
+      - web
 
 networks:
-  serverabatjour:
-    driver: bridge
+  web:
+      external: true

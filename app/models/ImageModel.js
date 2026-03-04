@@ -8,13 +8,16 @@ let imageSchema = new Schema({
         required: true,
         auto: true
     },     
-    image: { type: String},
-    w:{type: Number},
-    h: {type: Number},
-    x:{type: Number},
-    y:{type: Number},
-    gridId:{type:String}
-   
+    image: { type: String },
+    grid: [
+        {
+        gridId: { type: String, required: true },
+        w: { type: Number },
+        h: { type: Number },
+        x: { type: Number },
+        y: { type: Number }
+        }
+    ]
 });
 
 module.exports = mongoose.model("images", imageSchema,"images");

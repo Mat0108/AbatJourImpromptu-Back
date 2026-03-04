@@ -17,7 +17,8 @@ app.use(express.static('public'));
 
 const allowedOrigins = [
   /\.netlify\.app$/,     
-  /\.netlify\.live$/,     
+  /\.netlify\.live$/,   
+  'https://abatjourimpromptu.fr',
   'http://localhost:3000',
   'http://127.0.0.1:3000'
 ];
