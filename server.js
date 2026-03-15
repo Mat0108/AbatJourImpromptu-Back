@@ -68,9 +68,11 @@ connectWithRetry();
 // Import et configuration des routes de l'application
 const imageRoute = require("./app/routes/imageRoute");
 const horaireRoute = require("./app/routes/horaireRoute");
+const languageRoute = require("./app/routes/languageRoute")
 
 imageRoute(app,corsOptions);
 horaireRoute(app,corsOptions);
+languageRoute(app,corsOptions);
 
 app.get("/", (req, res) => {
   res.status(200)

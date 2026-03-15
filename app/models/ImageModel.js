@@ -15,7 +15,8 @@ let imageSchema = new Schema({
         w: { type: Number },
         h: { type: Number },
         x: { type: Number },
-        y: { type: Number }
+        y: { type: Number },
+        description: {type: String}
         }
     ]
 });

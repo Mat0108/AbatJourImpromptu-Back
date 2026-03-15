@@ -57,7 +57,7 @@ exports.addImagesToGrid = async (req, res) => {
 
     for (const item of items) {
       const { imageId, gridId, data = {} } = item;
-      const { w = 2, h = 2, x, y } = data;
+      const { w = 2, h = 2, x, y,description } = data;
 
       if (!imageId || !gridId) {
         errors.push({
@@ -91,7 +91,7 @@ exports.addImagesToGrid = async (req, res) => {
         continue;
       }
 
-      image.grid.push({ gridId, w, h, x, y });
+      image.grid.push({ gridId, w, h, x, y,description });
       await image.save();
 
       results.push({
@@ -165,7 +165,7 @@ exports.getImagesNotInGrid = async (req, res) => {
 exports.updatePositionImage = async (req, res) => {
   try {
     const { imageId } = req.params;
-    const {gridId, w, h, x, y } = req.body;
+    const {gridId, w, h, x, y,description } = req.body;
 
     const image = await imageModel.findOneAndUpdate(
       { _id: imageId, "grid.gridId": gridId },
@@ -175,6 +175,7 @@ exports.updatePositionImage = async (req, res) => {
           "grid.$.h": h,
           "grid.$.x": x,
           "grid.$.y": y,
+          "grid.$.description": description
         }
       },
       { new: true }
@@ -204,6 +205,7 @@ exports.updatePositionsImages = async (req, res) => {
             "grid.$.h": item.data.h,
             "grid.$.x": item.data.x,
             "grid.$.y": item.data.y,
+            "grid.$.description":item.data.description
           }
         }
       }
@@ -285,3 +287,29 @@ exports.removeImage = async (req, res) => {
     res.status(500).json({ message: "Impossible de supprimer l'image", error });
   }
 };
+exports.updateDescription = async (req,res)=>{
+  try {
+    const { imageId } = req.params;
+    const { description, gridId } = req.body;
+  console.log('imageId : ', imageId,req.body)
+      
+    const image = await imageModel.findOneAndUpdate(
+      { _id: imageId, "grid.gridId": gridId },
+      {
+        $set: {
+          "grid.$.description": description
+        }
+      },
+      { new: true }
+    );
+
+    if (!image ) {
+      return res.status(404).json({ message: "Image ou grille introuvable" });
+    }
+
+    res.json({ message: "La description de l'image a bien été modifiée", image });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur lors de la mise à jour de la description", error });
+  }
+}
