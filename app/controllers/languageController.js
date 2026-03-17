@@ -13,7 +13,7 @@ exports.getLanguage = (req,res)=>{
 }
 
 exports.editValue = (req,res)=>{
-    languageModel.findByIdAndUpdate(languageId,req.body,(error,language)=>{
+    languageModel.findByIdAndUpdate(languageId,req.body,{new:true},(error,language)=>{
         if(error){
             res.status(401);
             res.json({message:"Impossible de modifier le dictionnaire"})
